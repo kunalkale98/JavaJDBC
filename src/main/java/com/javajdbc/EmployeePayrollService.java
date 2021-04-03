@@ -34,7 +34,7 @@ public class EmployeePayrollService {
         }
     }
     public List<EmployeePayrollData> readData(){
-        String sqlQuery = "SELECT * FROM employee_payroll;";
+        String sqlQuery = "SELECT * FROM employee_payroll";
         try {
             Connection connection = this.getConnection();
             Statement statement = connection.createStatement();
@@ -71,5 +71,25 @@ public class EmployeePayrollService {
             }
         }
         return 0.0;
+    }
+    public List<EmployeePayrollData> joiningDateRangeData(String sqlQuery){
+        List<EmployeePayrollData> joiningData = new ArrayList<>();
+        try {
+            Connection connection = this.getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sqlQuery);
+            while (result.next()){
+                int id = result.getInt("id");
+                String name = result.getString("name");
+                double salary = result.getDouble("salary");
+                LocalDate start_date = result.getDate("start_date").toLocalDate();
+                String gender = result.getString("gender");
+                joiningData.add(new EmployeePayrollData(id,name,salary,start_date,gender));
+            }
+            connection.close();
+        }catch (SQLException e){
+            throw new IllegalStateException("Unable to retrieve data",e);
+        }
+        return joiningData;
     }
 }

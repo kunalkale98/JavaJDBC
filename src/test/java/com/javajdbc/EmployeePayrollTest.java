@@ -26,4 +26,12 @@ public class EmployeePayrollTest {
         }
         Assert.assertTrue(result);
     }
+
+    @Test
+    public void givenQuery_ForEmployeeJoinedInThatDateRange_ShouldMatchListSize(){
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        String sql = "SELECT * FROM employee_payroll WHERE start_date BETWEEN CAST('2020-05-01' AS DATE) AND DATE(NOW());";
+        List<EmployeePayrollData> employeePayrollList = employeePayrollService.joiningDateRangeData(sql);
+        Assert.assertEquals(3,employeePayrollList.size());
+    }
 }
