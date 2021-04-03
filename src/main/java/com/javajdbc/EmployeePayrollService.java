@@ -7,6 +7,8 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class EmployeePayrollService {
+    List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
+
     public Connection getConnection() throws SQLException {
         String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service?useSSL=false";
         String username = "root";
@@ -33,7 +35,6 @@ public class EmployeePayrollService {
     }
     public List<EmployeePayrollData> readData(){
         String sqlQuery = "SELECT * FROM employee_payroll;";
-        List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
         try {
             Connection connection = this.getConnection();
             Statement statement = connection.createStatement();
@@ -51,5 +52,20 @@ public class EmployeePayrollService {
             throw new IllegalStateException("Unable to retrieve data",e);
         }
         return employeePayrollList;
+    }
+    public double updateEmployeeSalary(String name,double salary) {
+        String sql = String.format("update employee_payroll set salary = %.2f where name = '%s';", salary, name);
+        try (Connection connection = this.getConnection()) {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            throw new IllegalStateException("Unable to update data",e);
+        }
+        for (EmployeePayrollData data : employeePayrollList) {
+            if(data.name.equals(name)){
+                return data.salary;
+            }
+        }
+        return 0.0;
     }
 }
