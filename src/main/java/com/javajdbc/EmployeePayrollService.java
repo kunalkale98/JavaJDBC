@@ -54,13 +54,17 @@ public class EmployeePayrollService {
         return employeePayrollList;
     }
     public double updateEmployeeSalary(String name,double salary) {
-        String sql = String.format("update employee_payroll set salary = %.2f where name = '%s';", salary, name);
-        try (Connection connection = this.getConnection()) {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(sql);
+        try {
+            Connection connection = this.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("update employee_payroll set salary=? where name=?;");
+            preparedStatement.setDouble(1,salary);
+            preparedStatement.setString(2,name);
+            preparedStatement.executeUpdate();
+            connection.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Unable to update data",e);
         }
+        this.readData();
         for (EmployeePayrollData data : employeePayrollList) {
             if(data.name.equals(name)){
                 return data.salary;

@@ -17,9 +17,8 @@ public class EmployeePayrollTest {
     @Test
     public void givenData_WhenUpdated_ShouldMatchTheSalaryEntered() {
         EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-        employeePayrollService.readData();
-        String name = "James";
-        double salary = 3000000.00;
+        String name = "Ben";
+        double salary = 25000.00;
         double updatedSalary = employeePayrollService.updateEmployeeSalary(name,salary);
         boolean result = false;
         if(salary == updatedSalary){
